@@ -12,7 +12,7 @@ import urllib2
 #==# Load Application Questionable Permissions #==#
 #=================================================#
 filename = raw_input("Input path to JSON of application TOTAL permissions: ")
-#filename = os.path.expanduser("~/Documents/Northwestern/Spring14/EECS450/allquestdict.json")
+#filename = os.path.expanduser("~/Documents/Northwestern/Spring14/EECS450/allquestdict2.json")
 json_data = open(filename)
 quest_perms = json.load(json_data)
 print("\n\nNumber of Apps with Questionable Perm Data: " + str(len(quest_perms)))
@@ -21,7 +21,7 @@ print("\n\nNumber of Apps with Questionable Perm Data: " + str(len(quest_perms))
 #==# Load Application Total Permissions #==#
 #==========================================#
 filename = raw_input("Input path to JSON of application QUESTIONABLE permissions: ")
-#filename = os.path.expanduser("~/Documents/Northwestern/Spring14/EECS450/all_permdict.json")
+#filename = os.path.expanduser("~/Documents/Northwestern/Spring14/EECS450/all_permdict2.json")
 json_data = open(filename)
 data = json.load(json_data)
 print("Number of Apps with Total Perm Data: " + str(len(data)))
@@ -29,7 +29,8 @@ print("Number of Apps with Total Perm Data: " + str(len(data)))
 #=============================================#
 #==# Load Database of Application Metadata #==#
 #=============================================#
-filename = os.path.expanduser("autocog2.db")
+filename = raw_input("Input path to DB of application metadata: ")
+# filename = os.path.expanduser("autocog2.db")
 db_data = sqlite3.connect(filename)
 c = db_data.cursor()
 

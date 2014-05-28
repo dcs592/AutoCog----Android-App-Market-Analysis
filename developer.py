@@ -3,7 +3,6 @@
 #===============================#
 import json, os, sys, math, re
 import numpy as np
-from glob import glob
 from operator import itemgetter
 import sqlite3
 from StringIO import StringIO
@@ -14,7 +13,7 @@ import urllib2
 #==# Load Application Questionable Permissions #==#
 #=================================================#
 filename = raw_input("Input path to JSON of application TOTAL permissions: ")
-#filename = os.path.expanduser("~/Documents/Northwestern/Spring14/EECS450/allquestdict.json")
+#filename = os.path.expanduser("~/Documents/Northwestern/Spring14/EECS450/allquestdict2.json")
 json_data = open(filename)
 quest_perms = json.load(json_data)
 print("\n\nNumber of Apps with Questionable Perm Data: " + str(len(quest_perms)))
@@ -23,7 +22,7 @@ print("\n\nNumber of Apps with Questionable Perm Data: " + str(len(quest_perms))
 #==# Load Application Total Permissions #==#
 #==========================================#
 filename = raw_input("Input path to JSON of application QUESTIONABLE permissions: ")
-#filename = os.path.expanduser("~/Documents/Northwestern/Spring14/EECS450/all_permdict.json")
+#filename = os.path.expanduser("~/Documents/Northwestern/Spring14/EECS450/all_permdict2.json")
 json_data = open(filename)
 all_perms = json.load(json_data)
 print("Number of Apps with Total Perm Data: " + str(len(all_perms)))
@@ -31,7 +30,8 @@ print("Number of Apps with Total Perm Data: " + str(len(all_perms)))
 #=============================================#
 #==# Load Database of Application Metadata #==#
 #=============================================#
-filename = os.path.expanduser("autocog2.db")
+filename = raw_input("Input path to DB of application metadata: ")
+#filename = os.path.expanduser("autocog2.db")
 db_data = sqlite3.connect(filename)
 c = db_data.cursor()
 
@@ -52,6 +52,7 @@ for row in c.execute('SELECT apkname, category, developer, more_from_developer, 
 	more_apps = row[3]
 	rating = row[4]
 
+	#get the autocog output matching this application
 	try: 
 		perms_list = quest_perms[row[0] + '.apk']
 	except:
@@ -100,7 +101,7 @@ for row in c.execute('SELECT apkname, category, developer, more_from_developer, 
 	#increment the number of times the same permission set was used by the developer in all apps
 	plist = ""
 	for item in all_list:
-		plist+= item + '.'
+		plist+= item + '.' #make a string of the permission set
 	if plist in devs[developer]['all_perms_list']:
 		devs[developer]['all_perms_list'][plist]+= 1
 	else:
@@ -115,7 +116,7 @@ num_mult = 0
 match_num = 0
 close_match = 0
 most_perms = dict()
-mperms = 0
+wes_perms = 0
 all_same_perms = 0
 nearly_same_perms = 0
 same_categories = 0
@@ -144,7 +145,7 @@ for d in devs:
 				most_perms[max_perm] = 1
 			#if the most common q_perm was used at all
 			if 'WRITE_EXTERNAL_STORAGE' in devs[d]['qperms']:
-				mperms+= 1
+				wes_perms+= 1
 		#if the developer didn't use questionable permissions
 		else:
 			if devs[d]['count'] == 0:
@@ -231,7 +232,7 @@ print("\t| %38s | %35s | " %
 print("\t+----------------------------------------+-------------------------------------+")
 print("\t| %38s | %35s | " % 
 	("Total Using Most Requested".center(38), #number of developers using the most common q_perm
-		str(mperms).center(35)))
+		str(wes_perms).center(35)))
 print("\t+----------------------------------------+-------------------------------------+")
 del most_perms[max_perm]
 max_perm = max(most_perms, key=most_perms.get)
